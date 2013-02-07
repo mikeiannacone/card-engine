@@ -123,7 +123,7 @@ $.ajax({
 //Set up all your stuff
 (function() {
   var cols_ = $(".column");
-  var dragSrcEl_ = null;
+  var dragSrcEl_ = null; //seems kinda hacky, looking back on this.
 
   this.handleDragStart = function(e) {
     dragSrcEl_ = this;
@@ -144,55 +144,70 @@ $.ajax({
   };
 
   this.handleDragOver = function(e) {
-    if (e.preventDefault) {
+    console.log('handleDragOver')
+    //if (e.preventDefault) {
       e.preventDefault(); // Allows us to drop.
-    }
+    //}
 
     if( ! isGhosted(this) ){
       e.dataTransfer.dropEffect = 'move';
     }
-    return false;
+    //return false;
   };
 
   this.handleDragEnter = function(e) {
+    console.log('handleDragEnter')
+    e.preventDefault(); // Allows us to drop.
     if( ! isGhosted(dragSrcEl_)){
       this.addClassName('over');
     }
+    //return false;
   };
 
   this.handleDragLeave = function(e) {
     // this/e.target is previous target element.
+    console.log('handleDragLeave')
     this.removeClassName('over');
+    //return false;
   };
 
   this.handleDrop = function(e) {
+    console.log("handleDrop")
     // this/e.target is current target element.
 
-    e.stopPropagation(); // stops the browser from redirecting.
+    //e.stopPropagation(); // stops the browser from redirecting.
 
     // Don't do anything if we're dropping on the same column we're dragging.
     if (dragSrcEl_ != this && ! isGhosted(dragSrcEl_) ) {
-      dragSrcEl_.innerHTML = this.innerHTML;
-      this.innerHTML = e.dataTransfer.getData('text/html');
       dragSrcEl_.removeClassName('over');
       dragSrcEl_.removeClassName('moving');
       this.removeClassName('over');
+      this.removeClassName('moving');
+
+      dragSrcEl_.innerHTML = this.innerHTML;
+      this.innerHTML = e.dataTransfer.getData('text/html');
     }
 
-    return false;
+    //return false;
   };
 
+  // NB: only runs when the card is dropped back on its orig. spot.
+  // TODO: I assume the above is standard behavior, but have only tested in chrome.
   this.handleDragEnd = function(e) {
+    console.log("handleDragEnd");
+    dragSrcEl_.removeClassName('over');
+    dragSrcEl_.removeClassName('moving');
     // this/e.target is the source node.
-    //TODO does this code ever even run?
+    /* //below was for debugging: hopefully don't really need to reset all spaces like that.
     [].forEach.call(cols_, function (col) {
       col.removeClassName('over');
       col.removeClassName('moving');
     });
+    */
+    //return false;
   };
 
-
-  //init all your dudes, ghosted ones handled exactly the same here now
+  //init all your dudes, ghosted ones are handled exactly the same here now
   [].forEach.call(cols_, function (col) {
     col.setAttribute('draggable', 'true');  // Enable columns to be draggable.
     col.addEventListener('dragstart', handleDragStart, false);
