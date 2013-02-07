@@ -149,8 +149,9 @@ $.ajax({
       e.preventDefault(); // Allows us to drop.
     //}
 
-    if( ! isGhosted(this) ){
+    if( ! isGhosted(dragSrcEl_) ){
       e.dataTransfer.dropEffect = 'move';
+      this.addClassName('over');
     }
     //return false;
   };
