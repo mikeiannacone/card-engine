@@ -54,13 +54,15 @@ var cards = {
   "spade_Q"    :{"path":"200px-Playing_card_spade_Q.svg.png", "suit":"spade","val":12},
 }
 
+var debug = false;
+
 //print debug message as appropriate
 if (Modernizr.draganddrop) {
   // Browser supports HTML5 DnD.
-  console.log("browser supports DnD - yay!");
+  if(debug) console.log("browser supports DnD - yay!");
 } else {
   //TODO Fallback to a library solution.
-  console.log("browser does not support DnD - oh no!");
+  if(debug) console.log("browser does not support DnD - oh no!");
 }
 
 // Using this polyfill for safety.
@@ -144,7 +146,7 @@ $.ajax({
   };
 
   this.handleDragOver = function(e) {
-    console.log('handleDragOver')
+    if(debug) console.log('handleDragOver')
     //if (e.preventDefault) {
       e.preventDefault(); // Allows us to drop.
     //}
@@ -157,7 +159,7 @@ $.ajax({
   };
 
   this.handleDragEnter = function(e) {
-    console.log('handleDragEnter')
+    if(debug) console.log('handleDragEnter')
     e.preventDefault(); // Allows us to drop.
     if( ! isGhosted(dragSrcEl_)){
       this.addClassName('over');
@@ -167,13 +169,13 @@ $.ajax({
 
   this.handleDragLeave = function(e) {
     // this/e.target is previous target element.
-    console.log('handleDragLeave')
+    if(debug) console.log('handleDragLeave')
     this.removeClassName('over');
     //return false;
   };
 
   this.handleDrop = function(e) {
-    console.log("handleDrop")
+    if(debug) console.log("handleDrop")
     // this/e.target is current target element.
 
     //e.stopPropagation(); // stops the browser from redirecting.
@@ -195,7 +197,7 @@ $.ajax({
   // NB: only runs when the card is dropped back on its orig. spot.
   // TODO: I assume the above is standard behavior, but have only tested in chrome.
   this.handleDragEnd = function(e) {
-    console.log("handleDragEnd");
+    if(debug) console.log("handleDragEnd");
     dragSrcEl_.removeClassName('over');
     dragSrcEl_.removeClassName('moving');
     // this/e.target is the source node.
